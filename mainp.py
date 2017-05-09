@@ -315,7 +315,8 @@ def DetecteLandmark_my():
 
 
 def closeball1(threshold):
-    LEFT=0
+    
+    LEFT_=0
     redball.lookat(robotIP, PORT)
     count=1
     flag_p=0
@@ -350,21 +351,52 @@ def closeball1(threshold):
                     motionProxy.moveTo(x, y, theta)
                     time.sleep(1.5)
             else:
-                Movex(0.25)
-                if (left < 20):
-                    x = 0.0
-                    y = 0.0
-                    theta = math.pi / 15
-                    motionProxy.moveTo(x, y, theta)
-                    time.sleep(1.5)
-                elif (left > 20):
-                    x = 0.0
-                    y = 0.0
-                    theta = -1*math.pi / 15
-                    motionProxy.moveTo(x, y, theta)
-                    time.sleep(1.5)
+                if(top<=-10):
+                    if (left < 30):
+                        x = 0.0
+                        y = 0.0
+                        theta = math.pi / 15
+                        motionProxy.moveTo(x, y, theta)
+                        time.sleep(1.5)
+                    elif (left > 30):
+                        x = 0.0
+                        y = 0.0
+                        theta = -1*math.pi / 15
+                        motionProxy.moveTo(x, y, theta)
+                        time.sleep(1.5)
+                    Movex(0.45)
+                elif(-20<=top<=50):
+                    if (left < 25):
+                        x = 0.0
+                        y = 0.0
+                        theta = math.pi / 15
+                        motionProxy.moveTo(x, y, theta)
+                        time.sleep(1.5)
+                    elif (left > 25):
+                        x = 0.0
+                        y = 0.0
+                        theta = -1*math.pi / 15
+                        motionProxy.moveTo(x, y, theta)
+                        time.sleep(1.5)
+                    Movex(0.30)
+                else:
+                    if (left < 25):
+                        x = 0.0
+                        y = 0.0
+                        theta = math.pi / 15
+                        motionProxy.moveTo(x, y, theta)
+                        time.sleep(1.5)
+                    elif (left > 25):
+                        x = 0.0
+                        y = 0.0
+                        theta = -1*math.pi / 15
+                        motionProxy.moveTo(x, y, theta)
+                        time.sleep(1.5)
+                    Movex(0.15)
+                    
+                    
         else:
-            if(LEFT==0):
+            if(LEFT_==0):
                 x = 0.0
                 y = 0.0
                 theta = math.pi / 8
@@ -376,7 +408,7 @@ def closeball1(threshold):
                 motionProxy.moveTo(x, y, theta)
 #**********************************
 def closeball1_right(threshold):
-    LEFT = 1
+    LEFT_ = 1
     redball.lookat(robotIP, PORT)
     count = 1
     flag_p = 0
@@ -425,7 +457,7 @@ def closeball1_right(threshold):
                     motionProxy.moveTo(x, y, theta)
                     time.sleep(1.5)
         else:
-            if (LEFT == 0):
+            if (LEFT_ == 0):
                 x = 0.0
                 y = 0.0
                 theta = math.pi / 8
@@ -464,8 +496,6 @@ def closeball2(threshold,close1):
                 motionProxy.moveTo(x, y, theta)
                 time.sleep(1.8)
                 closeball1(27)
-
-
                 
             elif (top <-50):
                 x = 0.04
@@ -878,7 +908,7 @@ def main(robotIP, PORT):
     #******************************************3******************************************
     # HitBall(0.47)##333
     # Movet(math.pi / 1.9)#3333333333
-    # Movex(0.9)#3333
+    # Movex(0.9)#cancel
     # Movet(-math.pi / 4)#333333
     # #
     # #
