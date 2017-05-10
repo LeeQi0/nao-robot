@@ -313,7 +313,7 @@ def closeball1_sub_far():
     pass
 #to cancel the effect of landmark
 def closeball1_sub_land():
-    pass
+    DetecteLandmark()
 
 
 
@@ -1075,18 +1075,57 @@ def newruntohitball_far(threshold , topdistance ,ditance):
 
 
 #**********************************special for 1   3****
-def runtolandmark13():
-    isfindLand,size,x = DetecteLandmark_my()
-    if(isfind==0):
-        Movet(math.pi/6)
-    else: 
-        while(1):
-            isfindLand,size,x = DetecteLandmark_my()
-            if(-50<=x-th<=50)
-            elif(x-th>=50):
-                Movet(-math.pi/8)
-            else:
-                Movet(math.pi/8)
+
+def runtolandmark_face(threshold):
+    flag_n=0
+    flag_p=0
+    while(1):
+        isfindLand,size,left = DetecteLandmark_my()
+        if(isfind==0):
+            Movet(math.pi/6)
+        else: 
+            if (left <=threshold) & (left >= -threshold):
+                return size,left
+                    
+            elif (left > threshold):
+                    flag_p=1
+                    if((flag_p==1)&(flag_n==1)):
+                        count=count+1
+                        flag_n=0
+                    x = 0.0
+                    y = 0.0
+                    theta = -1*math.pi / (8*(2*count))
+                    motionProxy.moveTo(x, y, theta)
+                    time.sleep(1.5)    
+
+            elif (left <- threshold):
+                    flag_n=1
+                    if((flag_p==1)&(flag_n==1)):
+                        count=count+1
+                        flag_p=0
+                    x = 0.0
+                    y = 0.0
+                    theta = math.pi / (8*(2*count))
+                    motionProxy.moveTo(x, y, theta)
+                    time.sleep(1.5)
+#***********************************************************************************
+def runtolandmark13(threshold):
+    while(1):
+        size,left=runtolandmark13_face(50)
+        if(size>=threshold):
+            break 
+        elif(size<=10):
+            Movex(0.45)
+        elif(size<=30):
+            Movex(0.3)
+        elif(size<=40):
+            Movex(0.2)
+            
+#*******************************************************************************
+def runtolandmark2(threshold):
+    runtolandmark13(threshold)
+    Movex(0.5)
+       
             
 #**********************************************************************************
 def runtohitball_far( topdistance):
