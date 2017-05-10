@@ -264,11 +264,11 @@ def DetecteLandmark():
                 print  "landmark detect",robotToLandmark.r1_c4,robotToLandmark.r2_c4,robotToLandmark.r3_c4,distanceFromCameraToLandmark
                 return 1,robotToLandmark.r1_c4,robotToLandmark.r2_c4,robotToLandmark.r3_c4,distanceFromCameraToLandmark
             else:
-                wzCamera = markData[1][0][0][1]
-                wyCamera = markData[1][0][0][2]
+                wzCamera = (markData[1][0][0][1]+markData[1][1][0][1])/2
+                wyCamera = (markData[1][0][0][2]+markData[1][1][0][2])/2
 
                 # Retrieve landmark angular size in radians.
-                angularSize = markData[1][0][0][3]
+                angularSize = (markData[1][0][0][3]+markData[1][1][0][3])/2
 
                 # Compute distance to landmark.
                 distanceFromCameraToLandmark = landmarkTheoreticalSize / (2 * math.tan(angularSize / 2))
@@ -308,22 +308,30 @@ def DetecteLandmark_my():
             print  "landmark_my detect fff"
             return 0,0,0
 
+#***************************************************
+def closeball1_sub_far():
+    pass
+#to cancel the effect of landmark
+def closeball1_sub_land():
+    pass
 
 
 
 
-
-
+#close to down cam,and adjust the just position to ball
 def closeball1(threshold):
     
     LEFT_=0
     redball.lookat(robotIP, PORT)
     count=1
+    count0=0
     flag_p=0
     flag_n=0
     while (1):
+        if(count0==10):
+            Movey(0.5)
         size, left, top, cam, isfind = redball.findball(robotIP, PORT)
-        if isfind == 1:
+        if (isfind == 1):
             
             if (cam == 1):
 
@@ -336,7 +344,7 @@ def closeball1(threshold):
                         flag_n=0
                     x = 0.0
                     y = 0.0
-                    theta = -1*math.pi / (8*(2*count))
+                    theta = -1*math.pi / (10*(2*count))
                     motionProxy.moveTo(x, y, theta)
                     time.sleep(1.5)
 
@@ -347,7 +355,7 @@ def closeball1(threshold):
                         flag_p=0
                     x = 0.0
                     y = 0.0
-                    theta = math.pi / (8*(2*count))
+                    theta = math.pi / (10*(2*count))
                     motionProxy.moveTo(x, y, theta)
                     time.sleep(1.5)
             else:
@@ -365,7 +373,7 @@ def closeball1(threshold):
                         motionProxy.moveTo(x, y, theta)
                         time.sleep(1.5)
                     Movex(0.45)
-                elif(-20<=top<=50):
+                elif(-10<=top<=50):
                     if (left < 25):
                         x = 0.0
                         y = 0.0
@@ -397,18 +405,20 @@ def closeball1(threshold):
                     
         else:
             if(LEFT_==0):
+                count0=count0+1
                 x = 0.0
                 y = 0.0
                 theta = math.pi / 8
                 motionProxy.moveTo(x, y, theta)
             else:
+                count0=count0+1
                 x = 0.0
                 y = 0.0
                 theta = -math.pi / 8
                 motionProxy.moveTo(x, y, theta)
 #**********************************
-def closeball1_right(threshold):
-    LEFT_ = 1
+def oldclose():
+    LEFT_ = 0
     redball.lookat(robotIP, PORT)
     count = 1
     flag_p = 0
@@ -468,7 +478,104 @@ def closeball1_right(threshold):
                 theta = -math.pi / 8
                 motionProxy.moveTo(x, y, theta)
 
-#*********************************************************8
+#**************************8
+def closeball1_right(threshold):
+    LEFT_=0
+    redball.lookat(robotIP, PORT)
+    count=1
+    count0=0
+    flag_p=0
+    flag_n=0
+    while (1):
+        if(count0==10):
+            Movey(0.5)
+        size, left, top, cam, isfind = redball.findball(robotIP, PORT)
+        if (isfind == 1):
+            
+            if (cam == 1):
+
+                if (left <=threshold) & (left >= -threshold):
+                    break
+                elif (left > threshold):
+                    flag_p=1
+                    if((flag_p==1)&(flag_n==1)):
+                        count=count+1
+                        flag_n=0
+                    x = 0.0
+                    y = 0.0
+                    theta = -1*math.pi / (10*(2*count))
+                    motionProxy.moveTo(x, y, theta)
+                    time.sleep(1.5)
+
+                elif (left <- threshold):
+                    flag_n=1
+                    if((flag_p==1)&(flag_n==1)):
+                        count=count+1
+                        flag_p=0
+                    x = 0.0
+                    y = 0.0
+                    theta = math.pi / (10*(2*count))
+                    motionProxy.moveTo(x, y, theta)
+                    time.sleep(1.5)
+            else:
+                if(top<=-10):
+                    if (left < 30):
+                        x = 0.0
+                        y = 0.0
+                        theta = math.pi / 15
+                        motionProxy.moveTo(x, y, theta)
+                        time.sleep(1.5)
+                    elif (left > 30):
+                        x = 0.0
+                        y = 0.0
+                        theta = -1*math.pi / 15
+                        motionProxy.moveTo(x, y, theta)
+                        time.sleep(1.5)
+                    Movex(0.45)
+                elif(-10<=top<=50):
+                    if (left < 25):
+                        x = 0.0
+                        y = 0.0
+                        theta = math.pi / 15
+                        motionProxy.moveTo(x, y, theta)
+                        time.sleep(1.5)
+                    elif (left > 25):
+                        x = 0.0
+                        y = 0.0
+                        theta = -1*math.pi / 15
+                        motionProxy.moveTo(x, y, theta)
+                        time.sleep(1.5)
+                    Movex(0.30)
+                else:
+                    if (left < 25):
+                        x = 0.0
+                        y = 0.0
+                        theta = math.pi / 15
+                        motionProxy.moveTo(x, y, theta)
+                        time.sleep(1.5)
+                    elif (left > 25):
+                        x = 0.0
+                        y = 0.0
+                        theta = -1*math.pi / 15
+                        motionProxy.moveTo(x, y, theta)
+                        time.sleep(1.5)
+                    Movex(0.15)
+                    
+                    
+        else:
+            if(LEFT_==0):
+                count0=count0+1
+                x = 0.0
+                y = 0.0
+                theta = math.pi / 8
+                motionProxy.moveTo(x, y, theta)
+            else:
+                count0=count0+1
+                x = 0.0
+                y = 0.0
+                theta = -math.pi / 8
+                motionProxy.moveTo(x, y, theta)
+#*********************************************************
 def closeball2(threshold,close1):
     redball.lookat(robotIP, PORT)
     while (1):
@@ -482,23 +589,23 @@ def closeball2(threshold,close1):
 
 
 
-            elif(-50<=top<30):
+            elif(-60<=top<20):
                 x = 0.05
                 y = 0.0
                 theta=0
                 motionProxy.moveTo(x, y, theta)
                 time.sleep(1.8)
                 closeball1(close1)
-            elif(30<=top<threshold):
-                x = 0.02
+            elif(20<=top<threshold):
+                x = 0.03
                 y = 0.0
                 theta=0.0
                 motionProxy.moveTo(x, y, theta)
                 time.sleep(1.8)
                 closeball1(27)
                 
-            elif (top <-50):
-                x = 0.04
+            elif (top <-60):
+                x = 0.07
                 y = 0.0
                 theta=0.0
                 motionProxy.moveTo(x, y, theta)
@@ -596,6 +703,85 @@ def runtohitball90_n(threshold , topdistance ,ditance):
             redball.lookat(robotIP, PORT)
             closeball1(17)
             closeball2(topdistance,close1_)
+#**************************************
+def newruntohitball(threshold , topdistance ,ditance):
+    #turn head
+    #detecteland
+    #Movex(-0.08)
+    close1_=23
+    count=0
+    fivefindlandmark=0
+    while(1):
+        names = ["HeadPitch", "HeadYaw"]
+        angleLists = [0 * almath.TO_RAD, 90.0 * almath.TO_RAD]
+        timeLists = [1.0, 2.0]
+        isAbsolute = True
+        motionProxy.angleInterpolation(names, angleLists, timeLists, isAbsolute)
+        time.sleep(2.0)
+        isfindLand,x,y,z,d=DetecteLandmark()
+        time.sleep(2.0)
+        print  "landmark"
+        #90 degre cannot find
+        if(isfindLand==0):
+            for i in range (0,5):
+                    #***********************
+                    names = ["HeadPitch", "HeadYaw"]
+                    angleLists = [0.0 * almath.TO_RAD, (60.0-i*30.0) * almath.TO_RAD]
+                    timeLists = [1.0, 2.0]
+                    isAbsolute = True
+                    motionProxy.angleInterpolation(names, angleLists, timeLists, isAbsolute)
+                    time.sleep(1.0)
+                    #*****************************    
+                    isfindLand,x,y,z,d=DetecteLandmark()
+                    #find landmark
+                    
+                    if(isfindLand==1):
+                        if(i==0):
+                            t_=0.08
+                        elif(i==1):
+                            t_=0.12  
+                        elif(i==2):
+                            t_=0.16  
+                        elif(i==3):
+                            t_=0.20
+                        elif(i==4):
+                            t_=0.24
+                        elif(i==5):
+                            t_=0.30
+                        Movey(t_)
+                        Movet(-(math.atan(t_/ditance)+math.pi/16))
+                        fivefindlandmark=1
+                        break
+                    else:
+                        pass
+            if(fivefindlandmark==0):
+                t_=0.30
+                Movey(t_)
+                Movet(math.atan(t_/ditance)-math.pi/16)
+            closeball1(20)
+            closeball2(topdistance,close1_)
+                
+                        
+                        
+        elif(((x-ditance)<threshold)&((x-ditance)>-threshold)):
+            print x,threshold+ditance,ditance-threshold
+            return x,y,z,d
+        elif(x-ditance < -threshold):
+            print x, threshold + ditance, ditance - threshold
+            Movey(-0.04)
+            redball.lookat(robotIP, PORT)
+            #*************************************
+            closeball1(17)
+            closeball2(topdistance,close1_)
+        else:
+            count=count+1
+            Movey(0.04)
+            redball.lookat(robotIP, PORT)
+            closeball1(17)
+            closeball2(topdistance,close1_)
+    
+
+
 #**************************************
 
 
@@ -812,7 +998,96 @@ def runtohitball90_far(threshold , topdistance ,ditance):
             redball.lookat(robotIP, PORT)
             closeball1(17)
             closeball2(topdistance,close1_)
+#**********************************************************************************
+def newruntohitball_far(threshold , topdistance ,ditance):
+    close1_=23
+    count=0
+    fivefindlandmark=0
+    while(1):
+        names = ["HeadPitch", "HeadYaw"]
+        angleLists = [0 * almath.TO_RAD, 90.0 * almath.TO_RAD]
+        timeLists = [1.0, 2.0]
+        isAbsolute = True
+        motionProxy.angleInterpolation(names, angleLists, timeLists, isAbsolute)
+        time.sleep(2.0)
+        isfindLand, size, x = DetecteLandmark_my()
+        print x,threshold+ditance,ditance-threshold
+        time.sleep(2.0)
+        print  "landmark"
+        #90 degre cannot find
+        if(isfindLand==0):
+            for i in range (0,5):
+                    #***********************
+                    names = ["HeadPitch", "HeadYaw"]
+                    angleLists = [0.0 * almath.TO_RAD, (60.0-i*30.0) * almath.TO_RAD]
+                    timeLists = [1.0, 2.0]
+                    isAbsolute = True
+                    motionProxy.angleInterpolation(names, angleLists, timeLists, isAbsolute)
+                    time.sleep(1.0)
+                    #*****************************    
+                    isfindLand, size, x = DetecteLandmark_my()
+                    #find landmark
+                    
+                    if(isfindLand==1):
+                        if(i==0):
+                            t_=0.08
+                        elif(i==1):
+                            t_=0.12  
+                        elif(i==2):
+                            t_=0.16  
+                        elif(i==3):
+                            t_=0.20
+                        elif(i==4):
+                            t_=0.24
+                        elif(i==5):
+                            t_=0.30
+                        Movey(t_)
+                        Movet(-(math.atan(t_/ditance)+math.pi/16))
+                        fivefindlandmark=1
+                        break
+                    else:
+                        pass
+            if(fivefindlandmark==0):
+                t_=0.30
+                Movey(t_)
+                Movet(-(math.atan(t_/ditance)+math.pi/16))
+            closeball1(close1_)
+            closeball2(topdistance,close1_)
+                
+                        
+                        
+        elif(((x-ditance)>threshold)&((x-ditance)<-threshold)):
+            return size, x
+        elif(x-ditance < -threshold):
+            print x, threshold + ditance, ditance - threshold
+            Movey(-0.04)
+            redball.lookat(robotIP, PORT)
+            #*************************************
+            closeball1(close1_)
+            closeball2(topdistance,close1_)
+        else:
+            count=count+1
+            Movey(0.04)
+            redball.lookat(robotIP, PORT)
+            closeball1(close1_)
+            closeball2(topdistance,close1_)
+    
 
+
+#**********************************special for 1   3****
+def runtolandmark13():
+    isfindLand,size,x = DetecteLandmark_my()
+    if(isfind==0):
+        Movet(math.pi/6)
+    else: 
+        while(1):
+            isfindLand,size,x = DetecteLandmark_my()
+            if(-50<=x-th<=50)
+            elif(x-th>=50):
+                Movet(-math.pi/8)
+            else:
+                Movet(math.pi/8)
+            
 #**********************************************************************************
 def runtohitball_far( topdistance):
     # ***********************
@@ -879,6 +1154,7 @@ def runtohitball_far( topdistance):
 
 
         break
+        
     
 
 
@@ -903,58 +1179,64 @@ def main(robotIP, PORT):
 
     #get stick
     StandToGetstick()
+    #***************************************1*****************************************
+    #HitBall(0.42) #2 0.45eeeeeeeeeeeeeeeeeeeeeee
+    # Movex(0.01)
+    #Movet(math.pi /2 )  # 2eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+    #Movex(0.9)  #2eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+    
+    #****************************************2*****************************************
 
+   #  hitball  max=0.27
+
+    #HitBall(0.42) #2 0.45eeeeeeeeeeeeeeeeeeeeeee
+    # Movex(0.01)
+    #Movet(math.pi /2 )  # 2eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+    #Movex(0.9)  #2eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+    #Movey(0.75)#non
+    #Movet(math.pi / 3)#2eeeeeeeeeeeeeeeeeeeeeeeeeeee
+    #Movex(0.9)#eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+   #  Movex(0.4)#eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
+   #  Movet(math.pi /3)#2
+   #  # Movex(0.9)#2
+   # #  turn
 
     #******************************************3******************************************
-    # HitBall(0.47)##333
-    # Movet(math.pi / 1.9)#3333333333
-    # Movex(0.9)#cancel
+    # HitBall(0.47)##333eeeeeeeeeeeeeeeeeeeeeee
+    # Movex(0.01)# hold,maintance    eeeeeeeeeeeeeeeeeee          
+    # Movet(math.pi / 1.9)#3333333333eeeeeeeeeeeeeeeeeeeeeeeeeee
+    # 
+    # Movex(0.7)#cancel eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
     # Movet(-math.pi / 4)#333333
     # #
     # #
-    # closeball1(23)
+    # closeball1(23)#eeeeeeeeeeeeeeeeeeeeeee
     # # # # # # # **************
-    # closeball2(30,23)#55
-    # Movey(0.8)#33333333333
+    # closeball2(30,23)#55eeeeeeeeeeeeeeeeeeeeeeeeeee
+    # Movey(0.3)#33333333333eeeeeeeeeeeeeeeeeeeeeeeee
     # Movex(0.4)#333333333
     # Movet(-math.pi / 1.2)
     # # # # run to hit ball position   wtih 0
     # # #
-    # closeball1(23)
+    # closeball1(23)#eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
     # # # # # **************
-    # closeball2(30, 23)
+    # closeball2(30, 23)#eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee
     # size,x= runtohitball90_far(-60 , 30 ,-130)
-    # # #x0, y0, z0, dis = runtohitball(0.2, 30, 0.2)#30
+    # # #x0, y0, z0, dis = newruntohitball_far(-60, 30, -130)#30eeeeeeeeeeeeeeeeeeeeeeeeee
     # print "SS",x
     # closeball2(49, 23)
     # # # choose power depending on the distant
     # #
     # #
-    # HitBall(0.40)
-    # Movet(math.pi / 1.8)
-    # Movex(1.6)
-    #****************************************2*****************************************
-
-   #  hitball  max=0.27
-
-    #HitBall(0.42) #2 0.45
-
-    #Movet(math.pi / 2)  # 2
-    #Movex(0.6)  #2
-    #Movey(0.75)#non
-    #Movet(-math.pi / 3)#2
-    #Movex(0.9)
-   #  Movex(0.4)
-   #  Movet(math.pi /3)#2
-   #  # Movex(0.9)#2
-   # #  turn
-
+    # HitBall(0.40)#eeeeeeeeeeeeeeeeeeeeeeeeeee
+    # Movet(math.pi / 1.8)#eeeeeeeeeeeeeeeeeeeeeeeeeeeee
+    # Movex(1.6)#eeeeeeeeeeeeeeeeeeeeeeeee
     while(1):
         #Movet(math.pi/2.8)
         #run to ball
-        closeball1(17)
+        closeball1(23)
         # #**************
-        closeball2(30, 17)
+        closeball2(30, 23)
         #run to hit ball position   wtih 0
 
 
